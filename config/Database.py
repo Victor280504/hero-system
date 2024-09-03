@@ -1,5 +1,6 @@
 import traceback
 import psycopg2
+import os
 
 
 class Database:
@@ -8,33 +9,23 @@ class Database:
         self.__table = table
 
     def setConection(self):
+        user = os.getenv("DB_USER")
+        password = os.getenv("DB_PASS")
+        host = os.getenv("DB_HOST")
+        port = os.getenv("DB_PORT")
+        database = os.getenv("DB_NAME")
+
         self.__conn = psycopg2.connect(
-            user="postgres",
-            password="root",
-            host="localhost",
-            port="5432",
-            database="vendas",
+            user=user,
+            password=password,
+            host=host,
+            port=port,
+            database=database,
         )
 
     def closeConection(self):
         if self.__conn:
             self.__conn.close()
-
-    def execute(self, query, values=None):
-        try:
-            cursor = self.__conn.cursor()
-            if values:
-                cursor.execute(query, values)
-            else:
-                cursor.execute(query)
-            self.__conn.commit()
-            return cursor.rowcount
-        except (Exception, psycopg2.Error) as error:
-            print(error)
-            self.__conn.rollback()
-        finally:
-            cursor.close()
-            self.closeConection()
 
     def findAll(self, columns="*") -> list:
         try:
@@ -63,7 +54,7 @@ class Database:
             cursor.close()
             self.closeConection()
 
-    def insert(self, obj) -> int:
+    def insert(self, obj, returning) -> int:
         self.setConection()
         columns = ", ".join(obj.keys())
         values = ", ".join(
@@ -72,7 +63,25 @@ class Database:
                 for value in obj.values()
             ]
         )
-        return self.execute(f"INSERT INTO {self.__table} ({columns}) VALUES ({values})")
+
+        query = f"INSERT INTO {self.__table} ({columns}) VALUES ({values}) RETURNING {returning}"
+        
+        try:
+            cursor = self.__conn.cursor()
+            if values:
+                cursor.execute(query, values)
+            else:
+                cursor.execute(query)
+
+            self.__conn.commit()
+            
+            return cursor.fetchone()[0]
+        except (Exception, psycopg2.Error) as error:
+            print(error)
+            self.__conn.rollback()
+        finally:
+            cursor.close()
+            self.closeConection()
 
     def update(self, obj, field, value) -> int:
         self.setConection()
@@ -82,10 +91,39 @@ class Database:
                 for key, value in obj.items()
             ]
         )
-        return self.execute(
-            f"UPDATE {self.__table} SET {values} WHERE {field} = {value}"
-        )
+
+        query = f"UPDATE {self.__table} SET {values} WHERE {field} = {value}"
+
+        try:
+            cursor = self.__conn.cursor()
+            if values:
+                cursor.execute(query, values)
+            else:
+                cursor.execute(query)
+            self.__conn.commit()
+
+            return cursor.rowcount
+        except (Exception, psycopg2.Error) as error:
+            print(error)
+            self.__conn.rollback()
+        finally:
+            cursor.close()
+            self.closeConection()
 
     def delete(self, field, value) -> int:
         self.setConection()
-        return self.execute(f"DELETE FROM {self.__table} WHERE {field} = {value}")
+        
+        query = f"DELETE FROM {self.__table} WHERE {field} = {value}"
+        
+        try:
+            cursor = self.__conn.cursor()
+            cursor.execute(query)
+            self.__conn.commit()
+
+            return cursor.rowcount
+        except (Exception, psycopg2.Error) as error:
+            print(error)
+            self.__conn.rollback()
+        finally:
+            cursor.close()
+            self.closeConection()
