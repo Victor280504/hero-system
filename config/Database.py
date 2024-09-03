@@ -1,4 +1,6 @@
+import traceback
 import psycopg2
+
 
 class Database:
     def __init__(self, table):
@@ -14,6 +16,10 @@ class Database:
             database="vendas",
         )
 
+    def closeConection(self):
+        if self.__conn:
+            self.__conn.close()
+
     def execute(self, query, values=None):
         try:
             cursor = self.__conn.cursor()
@@ -28,37 +34,58 @@ class Database:
             self.__conn.rollback()
         finally:
             cursor.close()
-            
-    def insert(self, **kwargs):
-        self.setConection()
-        columns = ', '.join(kwargs.keys())
-        values = ', '.join([f"'{value}'" if isinstance(value, str) else str(value) for value in kwargs.values()])
-        query = f"INSERT INTO {self.__table} ({columns}) VALUES ({values})"
-        self.execute(query)
-        return "Data inserted successfully"
-            
-    def findAll(self, columns="*"):
-        self.setConection()
-        cursor = self.__conn.cursor()
-        cursor.execute(f"SELECT {columns} FROM {self.__table}")
-        return cursor.fetchall()
+            self.closeConection()
 
-    def findBy(self, field, value, columns="*"):
-        self.setConection()
-        cursor = self.__conn.cursor()
-        cursor.execute(f"SELECT {columns} FROM {self.__table} WHERE {field} = {value}")
-        return cursor.fetchall()
+    def findAll(self, columns="*") -> list:
+        try:
+            self.setConection()
+            cursor = self.__conn.cursor()
+            cursor.execute(f"SELECT {columns} FROM {self.__table}")
+            return cursor.fetchall()
+        except (Exception, psycopg2.Error) as error:
+            traceback.print_exc()
+        finally:
+            cursor.close()
+            self.closeConection()
 
-    def insert(self, obj):
+    def findBy(self, field, value, columns="*") -> list:
+
+        try:
+            self.setConection()
+            cursor = self.__conn.cursor()
+            cursor.execute(
+                f"SELECT {columns} FROM {self.__table} WHERE {field} = {value}"
+            )
+            return cursor.fetchone()
+        except (Exception, psycopg2.Error) as error:
+            traceback.print_exc()
+        finally:
+            cursor.close()
+            self.closeConection()
+
+    def insert(self, obj) -> int:
         self.setConection()
-        columns = ', '.join(obj.keys())
-        values = ', '.join([f"'{value}'" if isinstance(value, str) else str(value) for value in obj.values()])
-        row = self.execute(f"INSERT INTO {self.__table} ({columns}) VALUES ({values})")
-        return row
-    
-    def update(self, obj, field, value):
+        columns = ", ".join(obj.keys())
+        values = ", ".join(
+            [
+                f"'{value}'" if isinstance(value, str) else str(value)
+                for value in obj.values()
+            ]
+        )
+        return self.execute(f"INSERT INTO {self.__table} ({columns}) VALUES ({values})")
+
+    def update(self, obj, field, value) -> int:
         self.setConection()
-        values = ', '.join([f"{key} = '{value}'" if isinstance(value, str) else f"{key} = {value}" for key, value in obj.items()])
-        row = self.execute(f"UPDATE {self.__table} SET {values} WHERE {field} = {value}")
-        return f"UPDATE {self.__table} SET {values} WHERE {field} = {value}"
-        
+        values = ", ".join(
+            [
+                f"{key} = '{value}'" if isinstance(value, str) else f"{key} = {value}"
+                for key, value in obj.items()
+            ]
+        )
+        return self.execute(
+            f"UPDATE {self.__table} SET {values} WHERE {field} = {value}"
+        )
+
+    def delete(self, field, value) -> int:
+        self.setConection()
+        return self.execute(f"DELETE FROM {self.__table} WHERE {field} = {value}")
