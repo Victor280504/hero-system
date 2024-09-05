@@ -39,6 +39,24 @@ class Database:
             cursor.close()
             self.closeConection()
 
+    def find(self, fields, values, columns="*") -> list:
+        
+        conditions = " AND ".join([f"{field} = {value}" for field, value in zip(fields, values)])
+        query = f"SELECT {columns} FROM {self.__table} WHERE {conditions}"
+        
+        try:
+            self.setConection()
+            cursor = self.__conn.cursor()
+            cursor.execute(
+                query, values
+            )
+            return cursor.fetchall()
+        except (Exception, psycopg2.Error) as error:
+            traceback.print_exc()
+        finally:
+            cursor.close()
+            self.closeConection()
+
     def findBy(self, field, value, columns="*") -> list:
 
         try:
@@ -65,7 +83,7 @@ class Database:
         )
 
         query = f"INSERT INTO {self.__table} ({columns}) VALUES ({values}) RETURNING {returning}"
-        
+
         try:
             cursor = self.__conn.cursor()
             if values:
@@ -93,7 +111,7 @@ class Database:
         )
 
         query = f"UPDATE {self.__table} SET {values} WHERE {field} = {value}"
-
+        
         try:
             cursor = self.__conn.cursor()
             if values:
@@ -114,7 +132,6 @@ class Database:
         self.setConection()
         
         query = f"DELETE FROM {self.__table} WHERE {field} = {value}"
-        
         try:
             cursor = self.__conn.cursor()
             cursor.execute(query)

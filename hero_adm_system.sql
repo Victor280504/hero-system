@@ -534,6 +534,22 @@ ALTER TABLE ONLY public.super_tipo
 ALTER TABLE ONLY public.vilao
     ADD CONSTRAINT vilao_super_id_fk FOREIGN KEY (id_super_vilao) REFERENCES public.super(id_super);
 
+CREATE VIEW super_heroi AS
+    SELECT
+        s.id_super,
+        s.nome,
+        s.descricao,
+        s.status,
+        s.rank,
+        s.fraqueza,
+        s.arqui_inimigo,
+        h.contato,
+        h.disponibilidade
+    FROM
+        super s, heroi h
+    WHERE
+        s.id_super = h.id_super_heroi
+
 
 -- Completed on 2024-08-20 16:55:20
 

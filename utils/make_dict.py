@@ -10,3 +10,13 @@ def make_dict(pessoa_itens: list) -> dict:
             new_res[value] = new_value
 
     return new_res
+
+
+def make_dict_for_update(pessoa_itens: list) -> dict:
+    new_res = {}
+    for value in pessoa_itens:
+        new_value = input(f"Digite o novo {value} (deixe em branco para não atualizar): ")
+        if new_value:
+            new_res[value] = new_value
+
+    return new_res
