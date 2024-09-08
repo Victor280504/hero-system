@@ -5,7 +5,7 @@
 -- Dumped from database version 16.3
 -- Dumped by pg_dump version 16.3
 
--- Started on 2024-08-20 16:55:20
+-- Started on 2024-09-08 20:14:22
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -23,12 +23,12 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- TOC entry 216 (class 1259 OID 16580)
+-- TOC entry 215 (class 1259 OID 17505)
 -- Name: administrador; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.administrador (
-    id_adm serial NOT NULL,
+    id_adm integer NOT NULL,
     nome character varying,
     contato character varying,
     login character varying,
@@ -41,12 +41,37 @@ CREATE TABLE public.administrador (
 ALTER TABLE public.administrador OWNER TO postgres;
 
 --
--- TOC entry 215 (class 1259 OID 16573)
+-- TOC entry 216 (class 1259 OID 17510)
+-- Name: administrador_id_adm_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.administrador_id_adm_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.administrador_id_adm_seq OWNER TO postgres;
+
+--
+-- TOC entry 4935 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: administrador_id_adm_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.administrador_id_adm_seq OWNED BY public.administrador.id_adm;
+
+
+--
+-- TOC entry 217 (class 1259 OID 17511)
 -- Name: equipamento; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.equipamento (
-    id_equipamento serial NOT NULL,
+    id_equipamento integer NOT NULL,
     nome character varying,
     qtd_estoque integer,
     tipo character varying
@@ -56,7 +81,32 @@ CREATE TABLE public.equipamento (
 ALTER TABLE public.equipamento OWNER TO postgres;
 
 --
--- TOC entry 223 (class 1259 OID 16655)
+-- TOC entry 218 (class 1259 OID 17516)
+-- Name: equipamento_id_equipamento_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.equipamento_id_equipamento_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.equipamento_id_equipamento_seq OWNER TO postgres;
+
+--
+-- TOC entry 4936 (class 0 OID 0)
+-- Dependencies: 218
+-- Name: equipamento_id_equipamento_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.equipamento_id_equipamento_seq OWNED BY public.equipamento.id_equipamento;
+
+
+--
+-- TOC entry 219 (class 1259 OID 17517)
 -- Name: heroi; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -70,12 +120,12 @@ CREATE TABLE public.heroi (
 ALTER TABLE public.heroi OWNER TO postgres;
 
 --
--- TOC entry 219 (class 1259 OID 16601)
+-- TOC entry 220 (class 1259 OID 17522)
 -- Name: missao; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.missao (
-    id_missao serial NOT NULL,
+    id_missao integer NOT NULL,
     descricao character varying,
     data date,
     status character varying,
@@ -88,7 +138,7 @@ CREATE TABLE public.missao (
 ALTER TABLE public.missao OWNER TO postgres;
 
 --
--- TOC entry 220 (class 1259 OID 16613)
+-- TOC entry 221 (class 1259 OID 17527)
 -- Name: missao_equipamento; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -102,7 +152,7 @@ CREATE TABLE public.missao_equipamento (
 ALTER TABLE public.missao_equipamento OWNER TO postgres;
 
 --
--- TOC entry 225 (class 1259 OID 16679)
+-- TOC entry 222 (class 1259 OID 17530)
 -- Name: missao_heroi; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -115,7 +165,32 @@ CREATE TABLE public.missao_heroi (
 ALTER TABLE public.missao_heroi OWNER TO postgres;
 
 --
--- TOC entry 226 (class 1259 OID 16694)
+-- TOC entry 223 (class 1259 OID 17533)
+-- Name: missao_id_missao_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.missao_id_missao_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.missao_id_missao_seq OWNER TO postgres;
+
+--
+-- TOC entry 4937 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: missao_id_missao_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.missao_id_missao_seq OWNED BY public.missao.id_missao;
+
+
+--
+-- TOC entry 224 (class 1259 OID 17534)
 -- Name: missao_vilao; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -128,12 +203,12 @@ CREATE TABLE public.missao_vilao (
 ALTER TABLE public.missao_vilao OWNER TO postgres;
 
 --
--- TOC entry 218 (class 1259 OID 16594)
+-- TOC entry 225 (class 1259 OID 17537)
 -- Name: super; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.super (
-    id_super serial NOT NULL,
+    id_super integer NOT NULL,
     nome character varying,
     descricao character varying,
     status character varying,
@@ -146,7 +221,7 @@ CREATE TABLE public.super (
 ALTER TABLE public.super OWNER TO postgres;
 
 --
--- TOC entry 222 (class 1259 OID 16643)
+-- TOC entry 226 (class 1259 OID 17542)
 -- Name: super_habilidade; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -160,7 +235,54 @@ CREATE TABLE public.super_habilidade (
 ALTER TABLE public.super_habilidade OWNER TO postgres;
 
 --
--- TOC entry 221 (class 1259 OID 16628)
+-- TOC entry 232 (class 1259 OID 17651)
+-- Name: super_heroi; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.super_heroi AS
+ SELECT s.id_super,
+    s.nome,
+    s.descricao,
+    s.status,
+    s.rank,
+    s.fraqueza,
+    s.arqui_inimigo,
+    h.contato,
+    h.disponibilidade
+   FROM public.super s,
+    public.heroi h
+  WHERE (s.id_super = h.id_super_heroi);
+
+
+ALTER VIEW public.super_heroi OWNER TO postgres;
+
+--
+-- TOC entry 227 (class 1259 OID 17547)
+-- Name: super_id_super_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.super_id_super_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.super_id_super_seq OWNER TO postgres;
+
+--
+-- TOC entry 4938 (class 0 OID 0)
+-- Dependencies: 227
+-- Name: super_id_super_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.super_id_super_seq OWNED BY public.super.id_super;
+
+
+--
+-- TOC entry 228 (class 1259 OID 17548)
 -- Name: super_tipo; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -173,21 +295,7 @@ CREATE TABLE public.super_tipo (
 ALTER TABLE public.super_tipo OWNER TO postgres;
 
 --
--- TOC entry 217 (class 1259 OID 16587)
--- Name: tipo; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.tipo (
-    id_tipo serial NOT NULL,
-    nome character varying,
-    descricao character varying
-);
-
-
-ALTER TABLE public.tipo OWNER TO postgres;
-
---
--- TOC entry 224 (class 1259 OID 16667)
+-- TOC entry 231 (class 1259 OID 17557)
 -- Name: vilao; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -200,127 +308,107 @@ CREATE TABLE public.vilao (
 ALTER TABLE public.vilao OWNER TO postgres;
 
 --
--- TOC entry 4911 (class 0 OID 16580)
--- Dependencies: 216
--- Data for Name: administrador; Type: TABLE DATA; Schema: public; Owner: postgres
+-- TOC entry 233 (class 1259 OID 17655)
+-- Name: super_vilao; Type: VIEW; Schema: public; Owner: postgres
 --
 
-COPY public.administrador (id_adm, nome, contato, login, senha, endereco, data_inicio_adm) FROM stdin;
-\.
+CREATE VIEW public.super_vilao AS
+ SELECT s.id_super,
+    s.nome,
+    s.descricao,
+    s.status,
+    s.rank,
+    s.fraqueza,
+    s.arqui_inimigo,
+    v.situacao
+   FROM public.super s,
+    public.vilao v
+  WHERE (s.id_super = v.id_super_vilao);
 
 
---
--- TOC entry 4910 (class 0 OID 16573)
--- Dependencies: 215
--- Data for Name: equipamento; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.equipamento (id_equipamento, nome, qtd_estoque, tipo) FROM stdin;
-\.
-
-
---
--- TOC entry 4918 (class 0 OID 16655)
--- Dependencies: 223
--- Data for Name: heroi; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.heroi (id_super_heroi, disponibilidade, contato) FROM stdin;
-\.
-
+ALTER VIEW public.super_vilao OWNER TO postgres;
 
 --
--- TOC entry 4914 (class 0 OID 16601)
--- Dependencies: 219
--- Data for Name: missao; Type: TABLE DATA; Schema: public; Owner: postgres
+-- TOC entry 229 (class 1259 OID 17551)
+-- Name: tipo; Type: TABLE; Schema: public; Owner: postgres
 --
 
-COPY public.missao (id_missao, descricao, data, status, local, rank, id_adm) FROM stdin;
-\.
+CREATE TABLE public.tipo (
+    id_tipo integer NOT NULL,
+    nome character varying,
+    descricao character varying
+);
 
 
---
--- TOC entry 4915 (class 0 OID 16613)
--- Dependencies: 220
--- Data for Name: missao_equipamento; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.missao_equipamento (id_missao, id_equipamento, quantidade) FROM stdin;
-\.
-
+ALTER TABLE public.tipo OWNER TO postgres;
 
 --
--- TOC entry 4920 (class 0 OID 16679)
--- Dependencies: 225
--- Data for Name: missao_heroi; Type: TABLE DATA; Schema: public; Owner: postgres
+-- TOC entry 230 (class 1259 OID 17556)
+-- Name: tipo_id_tipo_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
-COPY public.missao_heroi (id_super_heroi, id_missao) FROM stdin;
-\.
+CREATE SEQUENCE public.tipo_id_tipo_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
+
+ALTER SEQUENCE public.tipo_id_tipo_seq OWNER TO postgres;
 
 --
--- TOC entry 4921 (class 0 OID 16694)
--- Dependencies: 226
--- Data for Name: missao_vilao; Type: TABLE DATA; Schema: public; Owner: postgres
+-- TOC entry 4939 (class 0 OID 0)
+-- Dependencies: 230
+-- Name: tipo_id_tipo_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-COPY public.missao_vilao (id_missao, id_super_vilao) FROM stdin;
-\.
+ALTER SEQUENCE public.tipo_id_tipo_seq OWNED BY public.tipo.id_tipo;
 
 
 --
--- TOC entry 4913 (class 0 OID 16594)
--- Dependencies: 218
--- Data for Name: super; Type: TABLE DATA; Schema: public; Owner: postgres
+-- TOC entry 4744 (class 2604 OID 17562)
+-- Name: administrador id_adm; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-COPY public.super (id_super, nome, descricao, status, rank, fraqueza, arqui_inimigo) FROM stdin;
-\.
+ALTER TABLE ONLY public.administrador ALTER COLUMN id_adm SET DEFAULT nextval('public.administrador_id_adm_seq'::regclass);
 
 
 --
--- TOC entry 4917 (class 0 OID 16643)
--- Dependencies: 222
--- Data for Name: super_habilidade; Type: TABLE DATA; Schema: public; Owner: postgres
+-- TOC entry 4745 (class 2604 OID 17563)
+-- Name: equipamento id_equipamento; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-COPY public.super_habilidade (id_super, classe, poder) FROM stdin;
-\.
+ALTER TABLE ONLY public.equipamento ALTER COLUMN id_equipamento SET DEFAULT nextval('public.equipamento_id_equipamento_seq'::regclass);
 
 
 --
--- TOC entry 4916 (class 0 OID 16628)
--- Dependencies: 221
--- Data for Name: super_tipo; Type: TABLE DATA; Schema: public; Owner: postgres
+-- TOC entry 4746 (class 2604 OID 17564)
+-- Name: missao id_missao; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-COPY public.super_tipo (id_super, id_tipo) FROM stdin;
-\.
+ALTER TABLE ONLY public.missao ALTER COLUMN id_missao SET DEFAULT nextval('public.missao_id_missao_seq'::regclass);
 
 
 --
--- TOC entry 4912 (class 0 OID 16587)
--- Dependencies: 217
--- Data for Name: tipo; Type: TABLE DATA; Schema: public; Owner: postgres
+-- TOC entry 4747 (class 2604 OID 17565)
+-- Name: super id_super; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-COPY public.tipo (id_tipo, nome, descricao) FROM stdin;
-\.
+ALTER TABLE ONLY public.super ALTER COLUMN id_super SET DEFAULT nextval('public.super_id_super_seq'::regclass);
 
 
 --
--- TOC entry 4919 (class 0 OID 16667)
--- Dependencies: 224
--- Data for Name: vilao; Type: TABLE DATA; Schema: public; Owner: postgres
+-- TOC entry 4748 (class 2604 OID 17566)
+-- Name: tipo id_tipo; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-COPY public.vilao (id_super_vilao, situacao) FROM stdin;
-\.
+ALTER TABLE ONLY public.tipo ALTER COLUMN id_tipo SET DEFAULT nextval('public.tipo_id_tipo_seq'::regclass);
 
 
 --
--- TOC entry 4734 (class 2606 OID 16586)
+-- TOC entry 4750 (class 2606 OID 17568)
 -- Name: administrador administrador_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -329,7 +417,7 @@ ALTER TABLE ONLY public.administrador
 
 
 --
--- TOC entry 4732 (class 2606 OID 16579)
+-- TOC entry 4752 (class 2606 OID 17570)
 -- Name: equipamento equipamento_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -338,7 +426,7 @@ ALTER TABLE ONLY public.equipamento
 
 
 --
--- TOC entry 4748 (class 2606 OID 16661)
+-- TOC entry 4754 (class 2606 OID 17572)
 -- Name: heroi heroi_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -347,7 +435,7 @@ ALTER TABLE ONLY public.heroi
 
 
 --
--- TOC entry 4742 (class 2606 OID 16617)
+-- TOC entry 4758 (class 2606 OID 17574)
 -- Name: missao_equipamento missao_equipamento_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -356,7 +444,7 @@ ALTER TABLE ONLY public.missao_equipamento
 
 
 --
--- TOC entry 4752 (class 2606 OID 16683)
+-- TOC entry 4760 (class 2606 OID 17576)
 -- Name: missao_heroi missao_heroi_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -365,7 +453,7 @@ ALTER TABLE ONLY public.missao_heroi
 
 
 --
--- TOC entry 4740 (class 2606 OID 16607)
+-- TOC entry 4756 (class 2606 OID 17578)
 -- Name: missao missao_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -374,7 +462,7 @@ ALTER TABLE ONLY public.missao
 
 
 --
--- TOC entry 4754 (class 2606 OID 16698)
+-- TOC entry 4762 (class 2606 OID 17580)
 -- Name: missao_vilao missao_vilao_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -383,7 +471,7 @@ ALTER TABLE ONLY public.missao_vilao
 
 
 --
--- TOC entry 4746 (class 2606 OID 16649)
+-- TOC entry 4766 (class 2606 OID 17582)
 -- Name: super_habilidade super_habilidade_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -392,7 +480,7 @@ ALTER TABLE ONLY public.super_habilidade
 
 
 --
--- TOC entry 4738 (class 2606 OID 16600)
+-- TOC entry 4764 (class 2606 OID 17584)
 -- Name: super super_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -401,7 +489,7 @@ ALTER TABLE ONLY public.super
 
 
 --
--- TOC entry 4744 (class 2606 OID 16632)
+-- TOC entry 4768 (class 2606 OID 17586)
 -- Name: super_tipo super_tipo_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -410,7 +498,7 @@ ALTER TABLE ONLY public.super_tipo
 
 
 --
--- TOC entry 4736 (class 2606 OID 16593)
+-- TOC entry 4770 (class 2606 OID 17588)
 -- Name: tipo tipo_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -419,7 +507,7 @@ ALTER TABLE ONLY public.tipo
 
 
 --
--- TOC entry 4750 (class 2606 OID 16673)
+-- TOC entry 4772 (class 2606 OID 17590)
 -- Name: vilao vilao_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -428,130 +516,114 @@ ALTER TABLE ONLY public.vilao
 
 
 --
--- TOC entry 4761 (class 2606 OID 16662)
+-- TOC entry 4773 (class 2606 OID 17591)
 -- Name: heroi heroi_super_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.heroi
-    ADD CONSTRAINT heroi_super_id_fk FOREIGN KEY (id_super_heroi) REFERENCES public.super(id_super);
+    ADD CONSTRAINT heroi_super_id_fk FOREIGN KEY (id_super_heroi) REFERENCES public.super(id_super) ON DELETE CASCADE;
 
 
 --
--- TOC entry 4755 (class 2606 OID 16608)
+-- TOC entry 4774 (class 2606 OID 17596)
 -- Name: missao missao_adm_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.missao
-    ADD CONSTRAINT missao_adm_id_fk FOREIGN KEY (id_adm) REFERENCES public.administrador(id_adm);
+    ADD CONSTRAINT missao_adm_id_fk FOREIGN KEY (id_adm) REFERENCES public.administrador(id_adm) ON DELETE SET NULL;
 
 
 --
--- TOC entry 4756 (class 2606 OID 16623)
+-- TOC entry 4775 (class 2606 OID 17601)
 -- Name: missao_equipamento missao_eqp_eqp_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.missao_equipamento
-    ADD CONSTRAINT missao_eqp_eqp_id_fk FOREIGN KEY (id_equipamento) REFERENCES public.equipamento(id_equipamento);
+    ADD CONSTRAINT missao_eqp_eqp_id_fk FOREIGN KEY (id_equipamento) REFERENCES public.equipamento(id_equipamento) ON DELETE CASCADE;
 
 
 --
--- TOC entry 4757 (class 2606 OID 16618)
+-- TOC entry 4776 (class 2606 OID 17606)
 -- Name: missao_equipamento missao_eqp_missao_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.missao_equipamento
-    ADD CONSTRAINT missao_eqp_missao_id_fk FOREIGN KEY (id_missao) REFERENCES public.missao(id_missao);
+    ADD CONSTRAINT missao_eqp_missao_id_fk FOREIGN KEY (id_missao) REFERENCES public.missao(id_missao) ON DELETE CASCADE;
 
 
 --
--- TOC entry 4763 (class 2606 OID 16684)
+-- TOC entry 4777 (class 2606 OID 17611)
 -- Name: missao_heroi missao_heroi_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.missao_heroi
-    ADD CONSTRAINT missao_heroi_id_fk FOREIGN KEY (id_super_heroi) REFERENCES public.heroi(id_super_heroi);
+    ADD CONSTRAINT missao_heroi_id_fk FOREIGN KEY (id_super_heroi) REFERENCES public.heroi(id_super_heroi) ON DELETE CASCADE;
 
 
 --
--- TOC entry 4764 (class 2606 OID 16689)
+-- TOC entry 4778 (class 2606 OID 17616)
 -- Name: missao_heroi missao_heroi_missao_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.missao_heroi
-    ADD CONSTRAINT missao_heroi_missao_id_fk FOREIGN KEY (id_missao) REFERENCES public.missao(id_missao);
+    ADD CONSTRAINT missao_heroi_missao_id_fk FOREIGN KEY (id_missao) REFERENCES public.missao(id_missao) ON DELETE CASCADE;
 
 
 --
--- TOC entry 4765 (class 2606 OID 16704)
+-- TOC entry 4779 (class 2606 OID 17621)
 -- Name: missao_vilao missao_vilao_missao_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.missao_vilao
-    ADD CONSTRAINT missao_vilao_missao_id_fk FOREIGN KEY (id_missao) REFERENCES public.missao(id_missao);
+    ADD CONSTRAINT missao_vilao_missao_id_fk FOREIGN KEY (id_missao) REFERENCES public.missao(id_missao) ON DELETE CASCADE;
 
 
 --
--- TOC entry 4766 (class 2606 OID 16699)
+-- TOC entry 4780 (class 2606 OID 17626)
 -- Name: missao_vilao missao_vilao_super_vilao_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.missao_vilao
-    ADD CONSTRAINT missao_vilao_super_vilao_id_fk FOREIGN KEY (id_super_vilao) REFERENCES public.vilao(id_super_vilao);
+    ADD CONSTRAINT missao_vilao_super_vilao_id_fk FOREIGN KEY (id_super_vilao) REFERENCES public.vilao(id_super_vilao) ON DELETE CASCADE;
 
 
 --
--- TOC entry 4760 (class 2606 OID 16650)
+-- TOC entry 4781 (class 2606 OID 17631)
 -- Name: super_habilidade super_habilidade_super_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.super_habilidade
-    ADD CONSTRAINT super_habilidade_super_id_fk FOREIGN KEY (id_super) REFERENCES public.super(id_super);
+    ADD CONSTRAINT super_habilidade_super_id_fk FOREIGN KEY (id_super) REFERENCES public.super(id_super) ON DELETE CASCADE;
 
 
 --
--- TOC entry 4758 (class 2606 OID 16633)
+-- TOC entry 4782 (class 2606 OID 17636)
 -- Name: super_tipo super_tipo_super_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.super_tipo
-    ADD CONSTRAINT super_tipo_super_id_fk FOREIGN KEY (id_super) REFERENCES public.super(id_super);
+    ADD CONSTRAINT super_tipo_super_id_fk FOREIGN KEY (id_super) REFERENCES public.super(id_super) ON DELETE CASCADE;
 
 
 --
--- TOC entry 4759 (class 2606 OID 16638)
+-- TOC entry 4783 (class 2606 OID 17641)
 -- Name: super_tipo super_tipo_tipo_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.super_tipo
-    ADD CONSTRAINT super_tipo_tipo_id_fk FOREIGN KEY (id_tipo) REFERENCES public.tipo(id_tipo);
+    ADD CONSTRAINT super_tipo_tipo_id_fk FOREIGN KEY (id_tipo) REFERENCES public.tipo(id_tipo) ON DELETE CASCADE;
 
 
 --
--- TOC entry 4762 (class 2606 OID 16674)
+-- TOC entry 4784 (class 2606 OID 17646)
 -- Name: vilao vilao_super_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.vilao
-    ADD CONSTRAINT vilao_super_id_fk FOREIGN KEY (id_super_vilao) REFERENCES public.super(id_super);
-
-CREATE VIEW super_heroi AS
-    SELECT
-        s.id_super,
-        s.nome,
-        s.descricao,
-        s.status,
-        s.rank,
-        s.fraqueza,
-        s.arqui_inimigo,
-        h.contato,
-        h.disponibilidade
-    FROM
-        super s, heroi h
-    WHERE
-        s.id_super = h.id_super_heroi
+    ADD CONSTRAINT vilao_super_id_fk FOREIGN KEY (id_super_vilao) REFERENCES public.super(id_super) ON DELETE CASCADE;
 
 
--- Completed on 2024-08-20 16:55:20
+-- Completed on 2024-09-08 20:14:22
 
 --
 -- PostgreSQL database dump complete

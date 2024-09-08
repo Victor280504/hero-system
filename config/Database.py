@@ -39,9 +39,12 @@ class Database:
             cursor.close()
             self.closeConection()
 
-    def find(self, fields, values, columns="*") -> list:
+    def find(self, fields, values, columns="*", operators=["="]) -> list:
         
-        conditions = " AND ".join([f"{field} = {value}" for field, value in zip(fields, values)])
+        conditions = " AND ".join([f"{field} {operator} {value}" for field, operator, value in zip(fields, operators, values)])
+        
+        if len(fields) == 1:
+            conditions = f"{fields[0]} {operators[0]} {values[0]}"
         query = f"SELECT {columns} FROM {self.__table} WHERE {conditions}"
         
         try:
@@ -67,7 +70,7 @@ class Database:
             )
             return cursor.fetchone()
         except (Exception, psycopg2.Error) as error:
-            traceback.print_exc()
+            print(error)
         finally:
             cursor.close()
             self.closeConection()
@@ -116,6 +119,35 @@ class Database:
             cursor = self.__conn.cursor()
             if values:
                 cursor.execute(query, values)
+            else:
+                cursor.execute(query)
+            self.__conn.commit()
+
+            return cursor.rowcount
+        except (Exception, psycopg2.Error) as error:
+            print(error)
+            self.__conn.rollback()
+        finally:
+            cursor.close()
+            self.closeConection()
+            
+    def update_field(self, obj, where_fields, where_values) -> int:
+        self.setConection()
+        set_values = ", ".join(
+            [
+                f"{key} = '{value}'" if isinstance(value, str) else f"{key} = {value}"
+                for key, value in obj.items()
+            ]
+        )
+        where_conditions = " AND ".join(
+            [f"{field} = {value}" for field, value in zip(where_fields, where_values)]
+        )
+        query = f"UPDATE {self.__table} SET {set_values} WHERE {where_conditions}"
+        
+        try:
+            cursor = self.__conn.cursor()
+            if set_values:
+                cursor.execute(query, set_values)
             else:
                 cursor.execute(query)
             self.__conn.commit()
