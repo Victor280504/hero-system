@@ -177,7 +177,7 @@ O objetivo deste projeto é desenvolver um sistema de gerenciamento de heróis, 
 
 ## Modelagem do Banco de Dados
 
-Nesta seção, apresentaremos a modelagem do banco de dados do sistema de gerenciamento de heróis. Serão abordados os requisitos de dados, o modelo de entidade relacionamento (MER) e o diagrama de entidade relacionamento (DER).
+Nesta seção, apresentaremos a modelagem do banco de dados do sistema de gerenciamento de heróis. Serão abordados o modelo de entidade relacionamento (MER) e o diagrama de entidade relacionamento (DER).
 
 ### Modelo de Entidade Relacionamento (MER)
 
