@@ -55,10 +55,6 @@ O objetivo deste projeto é desenvolver um sistema de gerenciamento de heróis, 
 3. Execute o arquivo `main.py` para iniciar o sistema
 4. Acesse o sistema através do terminal
 
-## Modelagem do Banco de Dados
-
-Nesta seção, apresentaremos a modelagem do banco de dados do sistema de gerenciamento de heróis. Serão abordados os requisitos de dados, o modelo de entidade relacionamento (MER) e o diagrama de entidade relacionamento (DER).
-
 ## Esquema Relacional
 
 ### Tabelas e seus Relacionamentos
@@ -178,6 +174,10 @@ Nesta seção, apresentaremos a modelagem do banco de dados do sistema de gerenc
 
 #### View: `super_vilao`
 - Combina dados de `super` e `vilao` para apresentar detalhes de super-vilões.
+
+## Modelagem do Banco de Dados
+
+Nesta seção, apresentaremos a modelagem do banco de dados do sistema de gerenciamento de heróis. Serão abordados os requisitos de dados, o modelo de entidade relacionamento (MER) e o diagrama de entidade relacionamento (DER).
 
 ### Modelo de Entidade Relacionamento (MER)
 
