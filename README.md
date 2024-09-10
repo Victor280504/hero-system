@@ -48,22 +48,6 @@ O objetivo deste projeto é desenvolver um sistema de gerenciamento de heróis, 
 3. Execute o arquivo.
 4. Adicione as credenciais do seu banco de dados no arquivo `.env`
 
-
-#### Para inicializar o banco de dados, siga os passos abaixo:
-
-1. Certifique-se de que o banco de dados está criado e configurado:
-2. Prepare o arquivo SQL de dados iniciais:
-3. Encontre o arquivo `initial_data.sql` que deve estar localizado na raiz do projeto.
-4. Abra o cliente SQL , pgAdmin, para se conectar ao banco de dados hero_adm_system e execute o arquivo SQL de dados iniciais `initial_data.sql` para inserir os dados iniciais nas tabelas do banco de dados.
-5. Agora você está pronto para utilizar o sistema de gerenciamento de heróis.
-
-#### Para verificar os dados inseridos:
-
-Execute consultas SQL para verificar se os dados foram inseridos corretamente nas tabelas.
-Por exemplo, você pode executar SELECT * FROM nome_da_tabela; para listar os registros de uma tabela específica.
-
-Caso os dados não tenham sido inseridos verifique o passo a passo e repita o processo novamente.
-
 ### Inicializando o sistema
 
 1. Clone este repositório
@@ -71,35 +55,141 @@ Caso os dados não tenham sido inseridos verifique o passo a passo e repita o pr
 3. Execute o arquivo `main.py` para iniciar o sistema
 4. Acesse o sistema através do terminal
 
-
-
-"""
-A licença deste projeto é a Licença MIT. A Licença MIT é uma licença de software livre que permite que qualquer pessoa obtenha uma cópia do software e o utilize, copie, modifique, una, publique, distribua, sublicencie e/ou venda, sujeito às seguintes condições: a inclusão do aviso de direitos autorais e da licença nos arquivos do software. A licença também isenta os autores de qualquer responsabilidade por danos ou outras reivindicações relacionadas ao software. É uma licença amplamente utilizada e permite que o software seja usado de forma flexível e aberta.
-"""
-
 ## Modelagem do Banco de Dados
 
 Nesta seção, apresentaremos a modelagem do banco de dados do sistema de gerenciamento de heróis. Serão abordados os requisitos de dados, o modelo de entidade relacionamento (MER) e o diagrama de entidade relacionamento (DER).
 
-### Requisitos de Dados
+## Esquema Relacional
 
-Os requisitos de dados são as informações que precisamos armazenar no banco de dados para atender às funcionalidades do sistema. Com base nas funcionalidades descritas anteriormente, identificamos os seguintes requisitos de dados:
+### Tabelas e seus Relacionamentos
 
-- Administradores: nome, email, senha
-- Heróis: nome, poderes, habilidades, nível
-- Missões: título, descrição, recompensa
-- Equipamentos: nome, descrição, tipo
-- Vilões: nome, poderes, nível
+#### Tabela: `administrador`
+- **Campos:**
+  - `id_adm` (PK, integer, NOT NULL) - Chave primária, gerada por uma sequência.
+  - `nome` (character varying)
+  - `contato` (character varying)
+  - `login` (character varying)
+  - `senha` (character varying)
+  - `endereco` (character varying)
+  - `data_inicio_adm` (date)
+- **Relações:**
+  - Relacionamento com a tabela `missao` (1:N), onde `id_adm` é a chave estrangeira em `missao`.
+
+#### Tabela: `equipamento`
+- **Campos:**
+  - `id_equipamento` (PK, integer, NOT NULL) - Chave primária, gerada por uma sequência.
+  - `nome` (character varying)
+  - `qtd_estoque` (integer)
+  - `tipo` (character varying)
+- **Relações:**
+  - Relacionamento com a tabela `missao_equipamento` (1:N), onde `id_equipamento` é a chave estrangeira.
+
+#### Tabela: `heroi`
+- **Campos:**
+  - `id_super_heroi` (PK, bigint, NOT NULL) - Chave primária.
+  - `disponibilidade` (character varying)
+  - `contato` (character varying)
+- **Relações:**
+  - Relacionamento com a tabela `super` (1:1), onde `id_super_heroi` é uma chave estrangeira que referencia `id_super` da tabela `super`.
+  - Relacionamento com a tabela `missao_heroi` (1:N), onde `id_super_heroi` é a chave estrangeira.
+
+#### Tabela: `missao`
+- **Campos:**
+  - `id_missao` (PK, integer, NOT NULL) - Chave primária, gerada por uma sequência.
+  - `descricao` (character varying)
+  - `data` (date)
+  - `status` (character varying)
+  - `local` (character varying)
+  - `rank` (character varying)
+  - `id_adm` (FK, bigint, NOT NULL) - Chave estrangeira para `administrador`.
+- **Relações:**
+  - Relacionamento com as tabelas `missao_equipamento`, `missao_heroi`, e `missao_vilao` (1:N), onde `id_missao` é a chave estrangeira.
+
+#### Tabela: `missao_equipamento`
+- **Campos:**
+  - `id_missao` (FK, bigint, NOT NULL) - Chave estrangeira para `missao`.
+  - `id_equipamento` (FK, bigint, NOT NULL) - Chave estrangeira para `equipamento`.
+  - `quantidade` (integer)
+- **Relações:**
+  - Relacionamento com `missao` e `equipamento` (M:N), representado por essa tabela de junção.
+
+#### Tabela: `missao_heroi`
+- **Campos:**
+  - `id_super_heroi` (FK, bigint, NOT NULL) - Chave estrangeira para `heroi`.
+  - `id_missao` (FK, bigint, NOT NULL) - Chave estrangeira para `missao`.
+- **Relações:**
+  - Relacionamento com `missao` e `heroi` (M:N), representado por essa tabela de junção.
+
+#### Tabela: `missao_vilao`
+- **Campos:**
+  - `id_missao` (FK, bigint, NOT NULL) - Chave estrangeira para `missao`.
+  - `id_super_vilao` (FK, bigint, NOT NULL) - Chave estrangeira para `vilao`.
+- **Relações:**
+  - Relacionamento com `missao` e `vilao` (M:N), representado por essa tabela de junção.
+
+#### Tabela: `super`
+- **Campos:**
+  - `id_super` (PK, integer, NOT NULL) - Chave primária, gerada por uma sequência.
+  - `nome` (character varying)
+  - `descricao` (character varying)
+  - `status` (character varying)
+  - `rank` (character varying)
+  - `fraqueza` (character varying)
+  - `arqui_inimigo` (character varying)
+- **Relações:**
+  - Relacionamento 1:1 com `heroi` e `vilao` (herdado através de views `super_heroi` e `super_vilao`).
+  - Relacionamento com `super_habilidade` e `super_tipo` (1:N).
+
+#### Tabela: `super_habilidade`
+- **Campos:**
+  - `id_super` (FK, bigint, NOT NULL) - Chave estrangeira para `super`.
+  - `classe` (character varying, NOT NULL)
+  - `poder` (character varying, NOT NULL)
+- **Relações:**
+  - Relacionamento com `super` (M:N), representado por essa tabela de junção.
+
+#### Tabela: `super_tipo`
+- **Campos:**
+  - `id_super` (FK, bigint, NOT NULL) - Chave estrangeira para `super`.
+  - `id_tipo` (FK, bigint, NOT NULL) - Chave estrangeira para `tipo`.
+- **Relações:**
+  - Relacionamento com `super` e `tipo` (M:N), representado por essa tabela de junção.
+
+#### Tabela: `tipo`
+- **Campos:**
+  - `id_tipo` (PK, integer, NOT NULL) - Chave primária, gerada por uma sequência.
+  - `nome` (character varying)
+  - `descricao` (character varying)
+- **Relações:**
+  - Relacionamento com `super_tipo` (1:N), onde `id_tipo` é a chave estrangeira.
+
+#### Tabela: `vilao`
+- **Campos:**
+  - `id_super_vilao` (PK, bigint, NOT NULL) - Chave primária.
+  - `situacao` (character varying)
+- **Relações:**
+  - Relacionamento com `super` (1:1), onde `id_super_vilao` é uma chave estrangeira que referencia `id_super` da tabela `super`.
+  - Relacionamento com `missao_vilao` (1:N), onde `id_super_vilao` é a chave estrangeira.
+
+### Views
+
+#### View: `super_heroi`
+- Combina dados de `super` e `heroi` para apresentar detalhes de super-heróis.
+
+#### View: `super_vilao`
+- Combina dados de `super` e `vilao` para apresentar detalhes de super-vilões.
 
 ### Modelo de Entidade Relacionamento (MER)
 
 O modelo de entidade relacionamento (MER) é uma representação visual das entidades, atributos e relacionamentos do sistema. Com base nos requisitos de dados, criamos o seguinte MER:
 
-
+![MER](docs/MER.png)
 
 ### Diagrama de Entidade Relacionamento (DER)
 
 O diagrama de entidade relacionamento (DER) é uma representação visual do modelo de entidade relacionamento (MER). Com base no MER apresentado anteriormente, criamos o seguinte DER:
 
+![MER](docs/DER.png)
 
-Com o modelo de entidade relacionamento (MER) e o diagrama de entidade relacionamento (DER), temos uma visão clara das entidades, atributos e relacionamentos do banco de dados do sistema de gerenciamento de heróis.
+## Licença
+Este projeto está licenciado sob os termos da [Licença GPL-3.0](LICENSE).
