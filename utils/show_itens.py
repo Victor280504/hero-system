@@ -1,3 +1,4 @@
+# responsável por mostrar os itens de uma lista
 
 def print_items(func):
     def wrapper(items):

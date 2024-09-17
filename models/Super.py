@@ -1,5 +1,8 @@
+# responsavel por manipular os dados da tabela super do banco de dados
 from config.Database import Database
-from utils.make_dict import make_dict, make_dict_for_update
+from utils.decorators import exception_handler
+from utils.exceptions import NotFoundError, DatabaseError
+from utils.response import Response
 
 
 class Super:
@@ -31,46 +34,57 @@ class Super:
             "fraqueza",
             "arqui_inimigo",
         ]
-        
+
     # RETORNA UM Super Por iD
     @staticmethod
-    def get_by_id(id: str) -> "Super":
+    @exception_handler
+    def get_by_id(id: str) -> Response:
         res = Database("super").findBy("id_super", id, "*")
-        
+
         if not res:
-            return None
-        
-        return Super(*res)
+            raise NotFoundError("Identificador Inexistente")
+
+        return Response(success=True, message="Super encontrado", data=Super(*res))
 
     # RETORNA TODOS OS SUPER
     @staticmethod
-    def get_all() -> list:
+    @exception_handler
+    def get_all() -> Response:
         res = Database("super").findAll("*")
-        return [
-            Super(*res) for res in res
-        ]
+        supers = [Super(*res) for res in res]
+        return Response(success=True, message="Todos os Super", data=supers)
 
     @staticmethod
-    def insert() -> int:
+    @exception_handler
+    def insert(data) -> Response:
         res = Database("super")
-        data_dict: dict = make_dict(Super.get_attributes_list()[1:])
-        return res.insert(data_dict, "id_super")
+        item = res.insert(data, "id_super")
+        if not item:
+            raise DatabaseError("Super não foi criado")
+        
+        return Response(success=True, message="Super inserido com sucesso", data=item)
 
-    def update(self) -> int:
+    @exception_handler
+    def update(self, data) -> Response:
         super_db = Database("super")
-        data_dict = make_dict_for_update(Super.get_attributes_list()[1:])
 
-        if not data_dict:
-            return "Nenhuma atualização foi feita"
+        if not data:
+            return Response(success=True, message="Nenhum dado foi atualizado", data=None)
 
-        for key, value in data_dict.items():
+        for key, value in data.items():
             self.__setattr__(key, value)
 
-        return super_db.update(data_dict, "id_super", self.id)
+        res = super_db.update(data, "id_super", self.id)
+        
+        return Response(success=True, message="Super atualizado com sucesso", data=res)
 
-    def delete(self) -> int:
+    @exception_handler
+    def delete(self) -> Response:
         res = Database("super")
-        return res.delete("id_super", self.id)
+        item = res.delete("id_super", self.id)
+        if not item:
+            raise DatabaseError("Super não foi deletado")
+        return Response(success=True, message="Vilão deletado com sucesso", data=item)
 
     def __str__(self):
         return f"ID: {self.id}\nNome: {self.nome}\nDescrição: {self.descricao}\nStatus: {self.status}\nRank: {self.rank}\nFraqueza: {self.fraqueza}\nArqui Inimigo: {self.arqui_inimigo}"

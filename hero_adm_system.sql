@@ -34,7 +34,7 @@ CREATE TABLE public.administrador (
     login character varying,
     senha character varying,
     endereco character varying,
-    data_inicio_adm date
+    data_inicio_adm TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -530,7 +530,7 @@ ALTER TABLE ONLY public.heroi
 --
 
 ALTER TABLE ONLY public.missao
-    ADD CONSTRAINT missao_adm_id_fk FOREIGN KEY (id_adm) REFERENCES public.administrador(id_adm) ON DELETE SET NULL;
+    ADD CONSTRAINT missao_adm_id_fk FOREIGN KEY (id_adm) REFERENCES public.administrador(id_adm) ON DELETE CASCADE;
 
 
 --

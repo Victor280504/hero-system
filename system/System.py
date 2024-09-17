@@ -1,8 +1,10 @@
+# Responsável por controlar o fluxo do sistema, chamando as interfaces e processando as opções do usuário
+
 from models.Administrator import Administrator
 from models.Hero import Hero
 from utils.show_itens import process_items
-from system.Interface import Interface
-
+from system.interfaces.Interface import Interface
+from utils.input import Input
 
 class System:
     def __init__(self):
@@ -31,57 +33,59 @@ class System:
                 self.menu = self.interface.equipamento()
 
     def first_menu(self):
-        print(
-            "============================================================================"
-        )
+        Input.print_slash()
         print("Bem vind@ ao sistema de gerenciamento de super-heróis")
-        print(
-            "============================================================================"
-        )
+        Input.print_slash()
         print("Por favor, selecione uma opção:")
         print("1. Logar como Administrador")
         print("2. Novo Administrador")
         print("3. Ver lista de heróis")
         print("4. Exit")
-        print(
-            "============================================================================"
-        )
-        while True:
-            option = input("Digite a opção desejada: ")
-            if option in ["1", "2", "3", "4"]:
-                return self.process_first_menu(option)
-            else:
-                print("Opção inválida. Por favor, selecione uma opção válida.")
-
+        Input.print_slash()
+        option = Input.get_option("Digite a opção desejada: ", ["1", "2", "3", "4"])
+        return self.process_first_menu(option)
+           
     def process_first_menu(self, option):
         if option == "1":
             return self.authenticate_admin()
         elif option == "2":
-            adm_id = Administrator.insert()
-            self.admin = Administrator.get_by_id(str(adm_id))
+            data = Input.make_dict(Administrator.get_attributes_list()[1:])
+            adm_id = Administrator.insert(data)
+            adm = Administrator.get_by_id(str(adm_id.data))
+            
+            if not adm.success:
+                print(adm.message)
+                return 0
+            
+            self.admin = adm.data
             self.admin_authenticated = True
             self.interface = Interface(self.admin)
             return 1
         elif option == "3":
             print("Esses são os nossos heróis cadastrados")
-            process_items(Hero.get_all())
+            heroes = Hero.get_all()
+            
+            if not heroes.success:
+                print(heroes.message)
+                return 0
+            
+            process_items(heroes.data)
             return 0
         elif option == "4":
-            print("Até mais!")
+            print("Até mais! Obrigado por utilizar o nosso sistema =)")
             exit()
         else:
             return 0
 
     def authenticate_admin(self):
-        self.admin = Administrator.sign_in()
-        if self.admin:
+        adm = Administrator.sign_in(Input.make_dict(["login", "senha"]))
+        if adm.success:
             self.admin_authenticated = True
+            self.admin = adm.data
             self.interface = Interface(self.admin)
         else:
-            print(
-                "============================================================================"
-            )
-            print("Invalid credentials. Please try again.")
+            Input.print_slash()
+            print(adm.message)
             self.admin_authenticated = False
             return 0
         return 1

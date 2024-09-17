@@ -1,6 +1,10 @@
+# Responsável por realizar a manipulação dos dados referentes aos Heróis
 from config.Database import Database
-from utils.make_dict import make_dict, make_dict_for_update
 from models.Super import Super
+from utils.decorators import exception_handler
+from utils.exceptions import NotFoundError, DatabaseError
+from utils.response import Response
+from utils.slices import get_subset, get_subset_by_key_list
 
 
 class Hero(Super):
@@ -25,55 +29,83 @@ class Hero(Super):
         return Super.get_attributes_list() + ["contato", "disponibilidade"]
 
     @staticmethod
-    def insert() -> int:
-        res_super = Super.insert()
-        res_hero = Database("heroi")
-        data_dict = {"id_super_heroi": res_super}
-        data_dict.update(make_dict(Hero.get_attributes_list()[7:]))
+    @exception_handler
+    def insert(data) -> Response:
+        res_super = Super.insert(get_subset(data, 0, 6))
 
-        return res_hero.insert(data_dict, "id_super_heroi")
+        if not res_super.success:
+            raise DatabaseError(res_super.message)
 
-    def update(self) -> int:
+        hero = Database("heroi")
+        data_dict = get_subset(data, 6, 8)
+        data_dict["id_super_heroi"] = res_super.data
+
+        res = hero.insert(data_dict, "id_super_heroi")
+
+        if not res:
+            raise DatabaseError("Herói não foi criado")
+
+        return Response(success=True, message="Herói inserido com sucesso", data=res)
+
+    @exception_handler
+    def update(self, data) -> Response:
         hero_db = Database("heroi")
         super_obj = Super.get_by_id(self.id)
-        super_obj.update()
-        data_dict = make_dict_for_update(Hero.get_attributes_list()[7:])
 
-        if not data_dict:
-            return "Nenhuma atualização foi feita"
+        if not super_obj.success:
+            raise DatabaseError(super_obj.message)
 
-        for key, value in data_dict.items():
+        h_res = super_obj.data.update(
+            get_subset_by_key_list(data, Super.get_attributes_list()[:7])
+        )
+
+        if not h_res:
+            raise DatabaseError(h_res.message)
+
+        data_dict = get_subset_by_key_list(data, Hero.get_attributes_list()[7:])
+
+        if not data:
+            return Response(
+                success=True, message="Nenhum dado foi atualizado", data=None
+            )
+
+        for key, value in data.items():
             self.__setattr__(key, value)
-
-        return hero_db.update(data_dict, "id_super_heroi", self.id)
+        res = hero_db.update(data_dict, "id_super_heroi", self.id)
+        
+        return Response(success=True, message="Herói atualizado com sucesso", data=res)
 
     @staticmethod
-    def get_all() -> list:
+    @exception_handler
+    def get_all() -> Response:
         res = Database("super_heroi").findAll("*")
-        return [Hero(*res) for res in res]
-    
-    def get_all_id_list() -> list:
-        res = Database("heroi").findAll("id_heroi")
-        return [item[0] for item in res]
+        heroes = [Hero(*res) for res in res]
+        return Response(success=True, message="Todos os Heróis", data=heroes)
 
+    @staticmethod    
+    def get_available() -> list:
+        res = Database("super_heroi").findAll("*")
+        return [Hero(*item) for item in res if item[8] == "Disponível"]
     @staticmethod
-    def get_by_id(id: str) -> "Hero":
+    @exception_handler
+    def get_by_id(id: str) -> Response:
         res = Database("super_heroi").findBy("id_super", id, "*")
-        
+
         if not res:
-            return None
-        
-        return Hero(*res)
+            raise NotFoundError("Identificador Inexistente")
 
-    def delete(self) -> int:
-        res = Database("heroi")
+        return Response(success=True, message="Herói encontrado", data=Hero(*res))
+    
+    @exception_handler
+    def delete(self) -> Response:
         super_obj = Super.get_by_id(self.id)
-
-        if input(f"Você deseja deletar o herói {self.nome} (s/n)? ").lower() == "s":
-            res.delete("id_super_heroi", self.id)
-            return super_obj.delete()
-
-        return "Nenhuma ação foi realizada"
-
+        if not super_obj.success:
+            raise DatabaseError(super_obj.message)
+        
+        res = super_obj.data.delete()
+        return Response(
+            success=True, message="Vilão deletado com sucesso", data=res
+        )
+    
     def __str__(self):
         return f"{super().__str__()},\nContato: {self.contato},\nDisponibilidade: {self.disponibilidade}"

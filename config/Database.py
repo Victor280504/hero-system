@@ -1,7 +1,7 @@
+# Responsável por realizar a conexão com o banco de dados e realizar as operações de CRUD
 import traceback
 import psycopg2
 import os
-
 
 class Database:
     def __init__(self, table):
@@ -160,6 +160,27 @@ class Database:
             cursor.close()
             self.closeConection()
 
+    def delete_fields(self, where_fields, where_values) -> int:
+        self.setConection()
+        
+        where_conditions = " AND ".join(
+            [f"{field} = {value}" for field, value in zip(where_fields, where_values)]
+        )
+        query = f"DELETE FROM {self.__table} WHERE {where_conditions}"
+        
+        try:
+            cursor = self.__conn.cursor()
+            cursor.execute(query)
+            self.__conn.commit()
+
+            return cursor.rowcount
+        except (Exception, psycopg2.Error) as error:
+            print(error)
+            self.__conn.rollback()
+        finally:
+            cursor.close()
+            self.closeConection()
+    
     def delete(self, field, value) -> int:
         self.setConection()
         
