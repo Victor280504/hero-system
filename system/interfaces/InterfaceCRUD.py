@@ -69,9 +69,10 @@ class InterfaceCRUD:
                 return self.menu
 
             data = Input.make_dict_for_update(self.Object.get_attributes_list()[1:])
+            Input.print_slash()
             res = new_obj.data.update(data)
             if res.success:
-                print(f"\n{self.name} atualizad{self.pronoun} com sucesso.")
+                print(res.message)
             else:
                 print(f"\nErro ao atualizar {self.name}: {res.message}")
 
@@ -95,8 +96,10 @@ class InterfaceCRUD:
                 res = Response(success=False, message="Operação cancelada")
 
             if res.success:
+                Input.print_slash()
                 print(f"\n{self.name} deletad{self.pronoun} com sucesso.")
             else:
+                Input.print_slash()
                 print(f"\nErro ao deletar {self.name}: {res.message}")
 
         elif opcao == "6":

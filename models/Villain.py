@@ -52,6 +52,11 @@ class Villain(Super):
 
         if not super_obj.success:
             raise DatabaseError(super_obj.message)
+        
+        if not data:
+            return Response(
+                success=True, message="Nenhum dado foi atualizado", data=None
+            )
 
         v_res = super_obj.data.update(get_subset_by_key_list(data, Super.get_attributes_list()[:7]))
 
@@ -59,11 +64,9 @@ class Villain(Super):
             raise DatabaseError(v_res.message)
 
         data_dict = get_subset_by_key_list(data, Villain.get_attributes_list()[7:])
-
-        if not data:
-            return Response(
-                success=True, message="Nenhum dado foi atualizado", data=None
-            )
+        
+        if not data_dict:
+            return Response(success=True, message="Vilão atualizado com sucesso", data=None)
 
         for key, value in data.items():
             self.__setattr__(key, value)

@@ -55,6 +55,11 @@ class Hero(Super):
         if not super_obj.success:
             raise DatabaseError(super_obj.message)
 
+        if not data:
+            return Response(
+                success=True, message="Nenhum dado foi atualizado", data=None
+            )
+            
         h_res = super_obj.data.update(
             get_subset_by_key_list(data, Super.get_attributes_list()[:7])
         )
@@ -64,13 +69,12 @@ class Hero(Super):
 
         data_dict = get_subset_by_key_list(data, Hero.get_attributes_list()[7:])
 
-        if not data:
-            return Response(
-                success=True, message="Nenhum dado foi atualizado", data=None
-            )
+        if not data_dict:
+            return Response(success=True, message="Herói atualizado com sucesso", data=None)
 
         for key, value in data.items():
             self.__setattr__(key, value)
+        
         res = hero_db.update(data_dict, "id_super_heroi", self.id)
         
         return Response(success=True, message="Herói atualizado com sucesso", data=res)
