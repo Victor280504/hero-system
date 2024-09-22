@@ -64,7 +64,7 @@ class Hero(Super):
             get_subset_by_key_list(data, Super.get_attributes_list()[:7])
         )
 
-        if not h_res:
+        if not h_res.success:
             raise DatabaseError(h_res.message)
 
         data_dict = get_subset_by_key_list(data, Hero.get_attributes_list()[7:])

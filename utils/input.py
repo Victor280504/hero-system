@@ -170,7 +170,7 @@ class Input:
     @staticmethod
     def get_list(prompt):
         while True:
-            user_input = input(prompt)
+            user_input = input(prompt).replace(" ", "")
             try:
                 if not user_input:
                     raise ValidationError(
@@ -194,7 +194,7 @@ class Input:
     @staticmethod
     def get_list_with_validation(prompt, validation):
         while True:
-            user_input = input(prompt)
+            user_input = input(prompt).replace(" ", "")
             try:
                 if not user_input:
                     raise ValidationError(

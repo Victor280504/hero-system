@@ -60,7 +60,7 @@ class Villain(Super):
 
         v_res = super_obj.data.update(get_subset_by_key_list(data, Super.get_attributes_list()[:7]))
 
-        if not v_res:
+        if not v_res.success:
             raise DatabaseError(v_res.message)
 
         data_dict = get_subset_by_key_list(data, Villain.get_attributes_list()[7:])

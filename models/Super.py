@@ -76,6 +76,9 @@ class Super:
 
         res = super_db.update(data, "id_super", self.id)
         
+        if not res:
+            raise DatabaseError("Super não foi atualizado")
+        
         return Response(success=True, message="Super atualizado com sucesso", data=res)
 
     @exception_handler

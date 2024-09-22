@@ -45,15 +45,16 @@ O objetivo deste projeto é desenvolver um sistema de gerenciamento de heróis, 
 1. Certifique-se de ter o PostgreSQL instalado em seu sistema.
 2. Abra o pgAdmin e crie um novo banco de dados chamado `hero_adm_system`
 3. Em seguida, abra o query toll do banco de dados, adicione o arquivo `hero_adm_system.sql` disponível na raiz do projeto.
-3. Execute o arquivo.
-4. Adicione as credenciais do seu banco de dados no arquivo `.env`
+4. Execute o arquivo.
 
 ### Inicializando o sistema
 
-1. Clone este repositório
-2. Instale as dependências utilizando o comando `pip install -r requirements.txt`
-3. Execute o arquivo `main.py` para iniciar o sistema
-4. Acesse o sistema através do terminal
+1. Certifique-se de tero o Python e o gerenciador de pacotes pip instalados em seu sistema.
+2. Clone este repositório
+3. Instale as dependências utilizando o comando `pip install -r requirements.txt`
+4. Adicione as credenciais do seu banco de dados no arquivo `.env`
+5. Execute o arquivo `main.py` para iniciar o sistema
+6. Acesse o sistema através do terminal
 
 ## Esquema Relacional
 
