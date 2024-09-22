@@ -49,7 +49,7 @@ O objetivo deste projeto é desenvolver um sistema de gerenciamento de heróis, 
 
 ### Inicializando o sistema
 
-1. Certifique-se de tero o Python e o gerenciador de pacotes pip instalados em seu sistema.
+1. Certifique-se de ter o Python e o gerenciador de pacotes pip instalados em seu sistema.
 2. Clone este repositório
 3. Instale as dependências utilizando o comando `pip install -r requirements.txt`
 4. Adicione as credenciais do seu banco de dados no arquivo `.env`
